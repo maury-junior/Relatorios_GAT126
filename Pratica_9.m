@@ -24,8 +24,8 @@ tau_1_Nish = exp(1)*trapz(t(t<theta_tau),T_norm(t<theta_tau));
 t_d_Nish = theta_tau-tau_1_Nish;
 den_Nish = [tau_1_Nish 1];
 H_Nish = tf(num,den_Nish);
-##H_Nish = H_Nish*exp(-t_d_Nish*s);
-##step(H_Nish)
+H_Nish = H_Nish*exp(-t_d_Nish*s);
+step(H_Nish)
 %H_Nish = tf(num,den_Nish,'InputDelay',t_d_Nish)
 
 %b - método de uma constante de tempo (63,2%)
