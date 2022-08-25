@@ -96,6 +96,17 @@ T_Hag = 2+lsim(H_Hag,v,t);
 T_Sun = 2+lsim(H_Sun,v,t);
 T_inc = 2+lsim(H_inc,v,t);
 
+MSE_Nish = mean( (T_Nish - T).^2 );
+MSE_1const = mean( (T_1const - T).^2 );
+MSE_4const = mean( (T_4const - T).^2 );
+MSE_ZN = mean( (T_ZN - T).^2 );
+MSE_Sm = mean( (T_Sm - T).^2 );
+MSE_Hag = mean( (T_Hag - T).^2 );
+MSE_Sun = mean( (T_Sun - T).^2 );
+MSE_inc = mean( (T_inc - T).^2 );
+
+MSE = [MSE_Nish MSE_1const MSE_4const MSE_ZN MSE_Sm MSE_Hag MSE_Sun MSE_inc]
+
 figure('color',[1 1 1])
 plot(t,T)
 hold all

@@ -1,16 +1,37 @@
-Dx = 1;
-Dy = 1;
 
-M_p = 0.3;
+dados = load('dadosordem2sobre.txt');
+t = dados(:,1);
+v = dados(:,2);
+T = dados(:,3);
+
+figure('color',[1 1 1])
+plot(t,T)
+grid on
+hold on
+
+
+Dx = max(v) - 0;
+Dy = max(T) - min(T);
 
 K = Dy/Dx;
 
+M_p = 0.3;
 
 %% Mollenkamp
 
-t1 % 0.15 y(inf)
-t2 % 0.45 y(inf)
-t3 % 0.75 y(inf)
+y_15 = min(T) + 0.15*Dy;
+y_45 = min(T) + 0.45*Dy;
+y_75 = min(T) + 0.75*Dy;
+
+plot(t,y_15*ones(1,length(t)))
+plot(t,y_45*ones(1,length(t)))
+plot(t,y_75*ones(1,length(t)))
+
+%
+
+t1 =  42;   % 0.15 y(inf)
+t2 =  83;   % 0.45 y(inf)
+t3 = 143.5; % 0.75 y(inf)
 
 x = (t2-t1)/(t3-t1);
 zeta = (0.0805-5.547*(0.475-x)^2)/(x-0.356);
@@ -29,6 +50,9 @@ if zeta>=1
     tau_1 = (zeta+sqrt(zeta^2-1))/omega_n;
     tau_2 = (zeta-sqrt(zeta^2-1))/omega_n;
 end
+
+H_Mol = tf([K*omega_n^2],[1 2*zeta*omega_n omega_n^2]);
+H_Mol_d = H_Mol*exp(-11*s);
 
 %% Philipp e Parr
 % Number of visible cycles
