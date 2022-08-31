@@ -103,6 +103,7 @@ H=U\T_rand;
 figure
 plot(H)
 
+
 % Resposta em frequencia
 v_rand_d = v_rand(1:length(v_rand)-1) - v_rand(2:length(v_rand));
 T_rand_d = T_rand(1:length(T_rand)-1) - T_rand(2:length(T_rand));
