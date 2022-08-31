@@ -9,7 +9,7 @@ Dx_sob = max(v_sob)-0;
 Dy_sob = max(T_sob)-min(T_sob);
 
 plot(t_sob,T_sob,'r')
-
+    
 K_sob = Dy_sob/Dx_sob;
 
 
@@ -93,17 +93,22 @@ plot(t_rand,T_rand)
 grid on
 hold on
 
-U=v_rand;
+% Identificacao do sistema pelo metodo da convolucao
+U=v_rand; % criacao da matrix de entrada U
 for i=1:length(v_rand)-1
-U=[U [zeros(i,1); v_rand(1:length(v_rand)-i)]];
+    U = [U [zeros(i,1); v_rand(1:length(v_rand)-i)]];
 end;
 
-H=U\T_rand;
+% solucao do sistema Y=UX para U (U = Y/X)
+H1=U\T_rand;
+H2=inv(U)*T_rand;
 
 figure
-plot(H)
+plot(H1)
+figure
+plot(H2)
 
-% Resposta em frequencia
+% Identificacao da resposta em frequencia
 v_rand_d = v_rand(1:length(v_rand)-1) - v_rand(2:length(v_rand));
 T_rand_d = T_rand(1:length(T_rand)-1) - T_rand(2:length(T_rand));
 
@@ -114,7 +119,7 @@ H = T_d_fft./v_d_fft;
 % vetor de frequencias
 freq=1/(length(T_rand))*(0:length(T_rand)/2);
 
-figure(2)
+figure
 subplot(211)
 semilogx(2*pi*freq,20*log10(abs(H(1:length(freq)))),'k--');
 title('(a)');
