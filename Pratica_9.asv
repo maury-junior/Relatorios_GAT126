@@ -110,5 +110,4 @@ plot(t,T_Sun)
 plot(t,T_inc)
 legend('Data','Nish','1 const.','4 const.','Ziegler-Nichols','Smith','Haglund','Sundaresan','Inc')
 
-T_approx = [T_Nish T_1const T_4const T_ZN T_Sm T_Hag T_Sun T_inc];
-MSE = sum((T_approx - repmat(T,1,size(T_approx,2)) ).^2)./size(T,1)
+T_approx = [T_Nish; T_1const;T_4const ;T_ZN ;T_Sm ;T_Hag ;T_Sun ;T_inc];
