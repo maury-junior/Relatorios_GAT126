@@ -84,8 +84,8 @@ den_inc = [tau_1_inc_inicial 1];
 H_inc = tf(num, den_inc)*exp(-t_d_inc_inicial*s);
 
 %
-tau_1_approx = [tau_1_Nish,tau_1_1const_temp,tau_1_4const_temp,tau_1_ZN,tau_1_Sm,tau_1_Hag,tau_1_Sun,tau_1_inc_inicial]'
-t_d_approx_all = [t_d_Nish,t_d_1const_temp,t_d_4const_temp,t_d_ZN,t_d_Sm,t_d_Hag,t_d_Sun,t_d_inc_inicial]'
+tau_1_approx = [tau_1_Nish,tau_1_1const_temp,tau_1_4const_temp,tau_1_ZN,tau_1_Sm,tau_1_Hag,tau_1_Sun,tau_1_inc_inicial]';
+t_d_approx_all = [t_d_Nish,t_d_1const_temp,t_d_4const_temp,t_d_ZN,t_d_Sm,t_d_Hag,t_d_Sun,t_d_inc_inicial]';
 %%
 T_Nish = 2+lsim(H_Nish,v,t);
 T_1const = 2+lsim(H_1const,v,t);

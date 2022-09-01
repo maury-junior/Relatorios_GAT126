@@ -1,3 +1,4 @@
+%%  Parte 1 - Sistema sobreamortecido
 s = tf('s');
 
 dadosordem2sob = load('dadosordem2sobre.txt');
@@ -7,12 +8,40 @@ T_sob = dadosordem2sob(:,3);
 
 Dx_sob = max(v_sob)-0;
 Dy_sob = max(T_sob)-min(T_sob);
-
-plot(t_sob,T_sob,'r')
-    
+  
 K_sob = Dy_sob/Dx_sob;
 
+% Mollenkamp
 
+y_inf_sob = 10;
+
+t1 = 42;    % 0.15 y(inf)
+t2 = 83.5;  % 0.45 y(inf)
+t3 = 144.5; % 0.75 y(inf)
+
+H_Mol_sob = SOPDT_Mollenkamp(K_sob,t1,t2,t3);
+
+% Caso sobreamortecido
+u_norm_sob = v_sob./v_sob;
+y_norm_sob = (T_sob-min(T_sob))./(max(T_sob)-min(T_sob));
+
+figure('color',[1 1 1])
+plot(t_sob,y_norm_sob);
+grid on
+
+Mi = 0.4/50;
+tm = 150;
+sys_type = 1; % sistema sobreamortecido
+H_Sun_sob = SOPDT_Sundaresan(K_sob,t_sob,u_norm_sob,y_norm_sob,sys_type,Mi,tm);
+% eta = 0.33
+
+figure('color',[1 1 1])
+plot(t_sob,T_sob,'r')
+grid on
+hold on
+step(H_Mol_sob,t_sob)
+step(H_Sun_sob,t_sob)
+%% Parte 2 - Sistema subamortecido
 dadosordem2sub = load('dadosordem2sub.txt');
 t_sub = dadosordem2sub(:,1);
 v_sub = dadosordem2sub(:,2);
@@ -35,13 +64,13 @@ H_Mp = SOPDT_Mp_equations(K_sub,tp_sub,M_p,td_sub);
 step(H_Mp)
 %% Mollenkamp
 
-y_inf_sob = 10;
-
-t1 = 42;    % 0.15 y(inf)
-t2 = 83.5;  % 0.45 y(inf)
-t3 = 144.5; % 0.75 y(inf)
-
-H_Mol_sob = SOPDT_Mollenkamp(K_sob,t1,t2,t3);
+% y_inf_sob = 10;
+% 
+% t1 = 42;    % 0.15 y(inf)
+% t2 = 83.5;  % 0.45 y(inf)
+% t3 = 144.5; % 0.75 y(inf)
+% 
+% H_Mol_sob = SOPDT_Mollenkamp(K_sob,t1,t2,t3);
 
 y_inf_sub = 5;
 t1 = 3.29; % 0.15 y(inf)
@@ -57,18 +86,18 @@ TN = 11.29-4.68;
 H_PP = SOPDT_Phillip_Parr(K_sub,N,TN,td_sub);
 step(H_PP)
 %% Sundaresan
-% Caso sobreamortecido
-u_norm_sob = v_sob./v_sob;
-y_norm_sob = (T_sob-min(T_sob))./(max(T_sob)-min(T_sob));
-
-figure('color',[1 1 1])
-plot(t_sob,y_norm_sob);
-grid on
-
-Mi = 0.4/50;
-tm = 150;
-sys_type = 1; % sistema sobreamortecido
-H_Sun_sob = SOPDT_Sundaresan(K_sob,t_sob,u_norm_sob,y_norm_sob,sys_type,Mi,tm);
+% % Caso sobreamortecido
+% u_norm_sob = v_sob./v_sob;
+% y_norm_sob = (T_sob-min(T_sob))./(max(T_sob)-min(T_sob));
+% 
+% figure('color',[1 1 1])
+% plot(t_sob,y_norm_sob);
+% grid on
+% 
+% Mi = 0.4/50;
+% tm = 150;
+% sys_type = 1; % sistema sobreamortecido
+% H_Sun_sob = SOPDT_Sundaresan(K_sob,t_sob,u_norm_sob,y_norm_sob,sys_type,Mi,tm);
 
 % Caso subamortecido
 u_norm_sub = v_sub./v_sub;
