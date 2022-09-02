@@ -51,8 +51,9 @@ t3 = 3.78; % 0.75 y(inf)
 H_Mol_sub = SOPDT_Mollenkamp(K_sub,t1,t2,t3);
 
 H_Mol = tf([K*omega_n^2],[1 2*zeta*omega_n omega_n^2]);
-H_Mol_d = H_Mol*exp(-11*s);
+H_Mol_d = H_Mol*exp(-t_d*s);
 
+step(H_Mol_d)
 %% Philipp e Parr
 % Number of visible cycles
 N = 2;
