@@ -3,13 +3,6 @@ t=pulso10(:,1);
 vazao=pulso10(:,2);
 nivel=pulso10(:,3);
 
-fmax=0.015;
-ind=find(f>=fmax);
-xind=ind(1);
-fft_v=fft(vazao)
-V(1:xind);
-fft_n=N(1:xind);
-f=f(1:xind);
 
 fft_tf = fft(vazao)./fft(nivel*1000/250);
 
@@ -18,6 +11,14 @@ h = 1.0440;
 t=0:d*1.0440:1.0440*(length(wv)-1);
 f = 0:1/t(length(t)):1/(d*h);
 f=2*pi*f;
+
+fmax=0.015;
+ind=find(f>=fmax);
+xind=ind(1);
+fft_v=fft(vazao)
+V(1:xind);
+fft_n=N(1:xind);
+f=f(1:xind);
 
 fft_tfa = abs(fft_tf);
 fft_tff = angle(fft_tf);
