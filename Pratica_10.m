@@ -112,12 +112,14 @@ tm = 3.98;
 sys_type = 2; % sistema subamortecido
 H_Sun_sub = SOPDT_Sundaresan(K_sub,t_sub,u_norm_sub,y_norm_sub,sys_type,Mi,tm);
 
-%%
+%% Parte 3
 dadosordem2rand = load('dadosordem2aleatorio.txt');
 t_rand = dadosordem2rand(:,1);
 v_rand = dadosordem2rand(:,2);
 T_rand = dadosordem2rand(:,3);
 
+
+% Identificacao pelo metodo da convolucao
 plot(t_rand,T_rand)
 grid on
 hold on
@@ -129,13 +131,24 @@ for i=1:length(v_rand)-1
 end;
 
 % solucao do sistema Y=UX para U (U = Y/X)
-H1=U\T_rand;
-H2=inv(U)*T_rand;
+% H1=U\T_rand;
+H=inv(U)*T_rand;
 
+% figure
+% plot(H1)
 figure
-plot(H1)
-figure
-plot(H2)
+plot(H)
+hold all
+
+u = ones(2000,1);
+U_step = u; % criacao da matrix de entrada U
+for i=1:length(u)-1
+    U_step = [U_step [zeros(i,1); u(1:length(u)-i)]];
+end;
+
+Y_st = U_step*H;
+
+plot(Y_st)
 
 % Identificacao da resposta em frequencia
 v_rand_d = v_rand(1:length(v_rand)-1) - v_rand(2:length(v_rand));
