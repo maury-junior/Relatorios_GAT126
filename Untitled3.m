@@ -7,18 +7,24 @@ plot(tempo,saida)
 grid on
 hold on
 
+entrada_d(1)=0;
+saida_d(1)=0;
 %Em relação a resposta em frequência, eu fiz:
 for k=1:2000
     if k>1
         entrada_d(k)=entrada(k-1)-entrada(k);
         saida_d(k)=saida(k-1)-saida(k);
-    end
+    end   
 end
 
 H = fft(saida)./fft(entrada);
 H_d= fft(saida_d)./fft(entrada_d);
 
+H_dB = 20*log10(H);
 freq = 1/length(tempo)*(0:length(tempo)/2);
+
+figure
+plot(semilogx(2*pi*freq),H_dB(1:length(freq)))
 
 figure
 subplot(211)
