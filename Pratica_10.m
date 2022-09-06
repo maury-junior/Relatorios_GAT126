@@ -118,7 +118,6 @@ t_rand = dadosordem2rand(:,1);
 v_rand = dadosordem2rand(:,2);
 T_rand = dadosordem2rand(:,3);
 
-
 % Identificacao pelo metodo da convolucao
 plot(t_rand,T_rand)
 grid on
@@ -137,7 +136,9 @@ H=inv(U)*T_rand;
 % figure
 % plot(H1)
 figure
-plot(H)
+plot(t_rand,H)
+axis([0 5 -2.6 2.6])
+grid on
 hold all
 
 u = ones(2000,1);
@@ -148,7 +149,7 @@ end;
 
 Y_st = U_step*H;
 
-plot(Y_st)
+plot(t_rand,Y_st)
 
 % Identificacao da resposta em frequencia
 v_rand_d = v_rand(1:length(v_rand)-1) - v_rand(2:length(v_rand));
