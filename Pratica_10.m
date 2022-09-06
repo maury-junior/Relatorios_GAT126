@@ -137,7 +137,9 @@ H=inv(U)*T_rand;
 % figure
 % plot(H1)
 figure
-plot(H)
+plot(t_rand,H)
+axis([0 5 -2.6 2.6])
+grid on
 hold all
 
 u = ones(2000,1);
