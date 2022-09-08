@@ -112,7 +112,7 @@ tm = 3.98;
 sys_type = 2; % sistema subamortecido
 H_Sun_sub = SOPDT_Sundaresan(K_sub,t_sub,u_norm_sub,y_norm_sub,sys_type,Mi,tm);
 
-%% Parte 3
+%% Parte 3 - Resposta ao impulso e resposta em frequencia
 dadosordem2rand = load('dadosordem2aleatorio.txt');
 t_rand = dadosordem2rand(:,1);
 v_rand = dadosordem2rand(:,2);
@@ -155,6 +155,8 @@ plot(Y_st)
 % Identificacao da resposta em frequencia
 v_rand_d = v_rand(1:length(v_rand)-1) - v_rand(2:length(v_rand));
 T_rand_d = T_rand(1:length(T_rand)-1) - T_rand(2:length(T_rand));
+
+% H = fft(T_rand)./fft(v_rand);
 
 v_d_fft = fft(v_rand_d);
 T_d_fft = fft(T_rand_d);
