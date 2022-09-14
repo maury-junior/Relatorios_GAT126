@@ -11,12 +11,12 @@ N = length(u_dados)/2;
 
 ry_norm = zeros(N,1);
 ry2_norm = zeros(N,1);
-for k=1:N
+for k=0:N-1
     ry_T_norm = (y_dados(1:N)-mean(y_dados))'*(y_dados(1+k:N+k)-mean(y_dados));
-    ry_norm(k) = ry_T_norm/(2*N+1);
+    ry_norm(k+1) = ry_T_norm/(2*N+1);
     
     ry2_T_norm = (y_dados(1:N).^2-mean(y_dados.^2))'*(y_dados(1+k:N+k).^2-mean(y_dados.^2));
-    ry2_norm(k) = ry2_T_norm/(2*N+1);
+    ry2_norm(k+1) = ry2_T_norm/(2*N+1);
 end
 
 figure('color',[1 1 1])
@@ -26,15 +26,15 @@ subplot(212)
 plot(1:N,ry2_norm)
 
 ruy = zeros(N,1);
-for k=1:N
+for k=0:N-1
     ruy_T = (u_dados(1:N)'-mean(u_dados))*(y_dados(1+k:N+k)-mean(y_dados));
-    ruy(k) = ruy_T/(2*N+1);
+    ruy(k+1) = ruy_T/(2*N+1);
 end
 
 figure('color',[1 1 1])
 plot(ruy)
 grid on
-% atraso = 4
+% atraso = 5
 %%
 d = 6; % Dizimização
 
