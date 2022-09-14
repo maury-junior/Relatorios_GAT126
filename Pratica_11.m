@@ -7,6 +7,12 @@ y_dados = ensaio_prbs(:,3);
 % figure('color',[1 1 1])
 % plot(t,u)
 
+% Filtro passa baixa:
+y_f = zeros(length(t_dados)-8,1);
+for k=1:length(t_dados)-8
+    y_f(k) = mean(y_dados(k:k+7));
+end
+
 N = length(u_dados)/2;
 
 ry_norm = zeros(N,1);
@@ -66,7 +72,7 @@ y = y_d;
 
 tau_d = 5; % atraso
 
-% y = a y(k-1) + b x(k-4) + c x(k-5)
+% y = a y(k-1) + b x(k-1-5) + c x(k-2-5)
 N_d = length(t);
 phi1 = [y(tau_d+2:N_d-1) u(2:N_d-tau_d-1) u(1:N_d-tau_d-2)];
 theta1 = pinv(phi1)*y(tau_d+3:N_d);
