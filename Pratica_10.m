@@ -151,6 +151,27 @@ Y_st = U_step*H;
 
 plot(t_rand,Y_st)
 
+% método aprimorado
+U=v_rand(1001:2000); % criacao da matrix de entrada U
+for i=1:length(U)-1
+    U = [U v_rand(1001-i:2000-i)];
+end
+
+% solucao do sistema Y=UX para U (U = Y/X)
+% H1=U\T_rand;
+H=inv(U)*T_rand(1001:2000);
+
+% figure
+% plot(H1)
+figure
+plot(t_rand(1:1000),H)
+axis([0 2.5 -1 2.6])
+grid on
+hold all
+
+
+
+
 % Identificacao da resposta em frequencia
 v_rand_d = v_rand(1:length(v_rand)-1) - v_rand(2:length(v_rand));
 T_rand_d = T_rand(1:length(T_rand)-1) - T_rand(2:length(T_rand));
