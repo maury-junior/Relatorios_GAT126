@@ -4,6 +4,45 @@ t_dados = ensaio_prbs(:,1);
 u_dados = ensaio_prbs(:,2);
 y_dados = ensaio_prbs(:,3);
 
+[ry,lagsy] = autocorr(y_dados,length(y_dados)-1);
+[ry2,lagsy2] = autocorr(y_dados.^2,length(y_dados)-1);
+
+MinY=lagsy((islocalmin(ry)));
+MinY2 = lagsy2((islocalmin(ry2)));
+firstMin = min(MinY(1),MinY2(1));
+
+if firstMin > 20
+    t_d = decimate(t_dados,floor(firstMin/20));
+    u_d = decimate(u_dados,floor(firstMin/20));
+    y_d = decimate(y_dados,floor(firstMin/20));
+else
+    t_d = t_dados;
+    u_d = u_dados;
+    y_d = y_dados;
+end
+
+[ruy, lagsUY] = crosscorr(u_d,y_d,length(y_d)-1);
+
+nd = lagsUY((islocalmax(ruy) & lagsUY>0)); 
+n_d = nd(1);
+
+N = length(y_d);
+phi1 = [y_d(n_d+1:N-1) u_d(1:N-1-n_d)];
+theta1 = pinv(phi1)*y_d(2+n_d:N);
+
+y_1d(1:n_d+1) = y_d(1:n_d+1);
+for k=n_d+2:N
+    y_1d(k) = [y_1d(k-1) u_d(k-1-n_d)]*theta1;
+end
+
+figure('color',[1 1 1])
+plot(t_d,y_d)
+hold all
+plot(t_d,y_1d,'r')
+axis([0 1000 -100 100])
+
+% phi2 = [y(1+n_d:N_d-1) u(1:N_d-1-n_d)];
+% theta2 = pinv(phi1)*y(2+n_d:N_d);
 % figure('color',[1 1 1])
 % plot(t,u)
 % 
@@ -13,40 +52,53 @@ y_dados = ensaio_prbs(:,3);
 %     y_f(k) = mean(y_dados(k:k+7));
 % end
 
-N = length(u_dados)/2;
-
-ry_norm = zeros(N,1);
-ry2_norm = zeros(N,1);
-for k=0:N-1
-    ry_T_norm = (y_dados(1:N)-mean(y_dados))'*(y_dados(1+k:N+k)-mean(y_dados));
-    ry_norm(k+1) = ry_T_norm/(2*N+1);
-    
-    ry2_T_norm = (y_dados(1:N).^2-mean(y_dados.^2))'*(y_dados(1+k:N+k).^2-mean(y_dados.^2));
-    ry2_norm(k+1) = ry2_T_norm/(2*N+1);
-end
+% N = length(u_dados)/2;
+% 
+% ry_norm = zeros(N,1);
+% ry2_norm = zeros(N,1);
+% for k=0:N-1
+%     ry_T_norm = (y_dados(1:N)-mean(y_dados))'*(y_dados(1+k:N+k)-mean(y_dados));
+%     ry_norm(k+1) = ry_T_norm/(2*N+1);
+%     
+%     ry2_T_norm = (y_dados(1:N).^2-mean(y_dados.^2))'*(y_dados(1+k:N+k).^2-mean(y_dados.^2));
+%     ry2_norm(k+1) = ry2_T_norm/(2*N+1);
+% end
 
 % figure('color',[1 1 1])
 % subplot(211)
 % plot(1:N,ry_norm)
 % subplot(212)
 % plot(1:N,ry2_norm)
-
-ruy = zeros(N,1);
-for k=0:N-1
-    ruy_T = (u_dados(1:N)'-mean(u_dados))*(y_dados(1+k:N+k)-mean(y_dados));
-    ruy(k+1) = ruy_T/(2*N+1);
-end
+% 
+% ruy = zeros(N,1);
+% for k=0:N-1
+%     ruy_T = (u_dados(1:N)'-mean(u_dados))*(y_dados(1+k:N+k)-mean(y_dados));
+%     ruy(k+1) = ruy_T/(2*N+1);
+% end
 
 % figure('color',[1 1 1])
 % plot(ruy)
 % grid on
-% atraso = 5
+% atraso = 4
 %%
-d = 8; % Dizimização
+d = 4; % Dizimização
+t_d = decimate(t_dados,d);
+u_d = decimate(u_dados,d);
+y_d = decimate(y_dados,d);
 
-t_d = t_dados(1:d:length(t_dados));
-u_d = u_dados(1:d:length(t_dados));
-y_d = y_dados(1:d:length(t_dados));
+% t_d = decimate(t_dados,d);
+% u_d = decimate(u_dados,d);
+% y_d = decimate(y_dados,d);
+
+autocorr(y_d,length(y_d)-1);
+% figure
+% plot(t_dados,y_dados)
+% hold on
+% plot(t_d,y_d,'r')
+
+% t_d = t_dados(1:d:length(t_dados));
+% u_d = u_dados(1:d:length(t_dados));
+% y_d = y_dados(1:d:length(t_dados));
 
 N_d = floor(length(t_d)/2);
 ry_d_norm = zeros(N_d,1);
@@ -65,12 +117,14 @@ end
 % subplot(212)
 % plot(1:N_d,ry2_d_norm)
 
+crosscorr(u_d,y_d,length(y_d)-1);
+
 %% Método MQ
 t = t_d;
 u = u_d;
 y = y_d;
 
-tau_d = 5; % atraso
+n_d = 1; % atraso
 
 % y = a y(k-1) + b x(k-1-5) + c x(k-2-5)
 N_d = length(t);
@@ -80,21 +134,24 @@ N_d = length(t);
 % % phi1 = [y(tau_d+1:N_d-1) u(1:N_d-tau_d-1)];
 % theta1 = pinv(phi1)*y(tau_d+2:N_d);
 
-phi1 = [y(1:N_d-1) u(1:N_d-1)];
-theta1 = pinv(phi1)*y(2:N_d);
+phi1 = [y(1+n_d:N_d-1) u(1:N_d-1-n_d)];
+theta1 = pinv(phi1)*y(2+n_d:N_d);
+
+% phi1 = [y(1:N_d-1) u(1:N_d-1)];
+% theta1 = pinv(phi1)*y(2:N_d);
 
 % phi2 = [y(tau_d+2:N_d-1) y(tau_d+2:N_d-2) u(2:N_d-tau_d-1) u(1:N_d-tau_d-2)];
 % theta2 = pinv(phi2)*y(tau_d+4:N_d);
 
-phi2 = [y(2:N_d-1) y(1:N_d-2) u(2:N_d-1) u(1:N_d-2)];
-theta2 = pinv(phi2)*y(3:N_d);
+phi2 = [y(2+n_d:N_d-1) y(1+n_d:N_d-2) u(2:N_d-1-n_d) u(1:N_d-2-n_d)];
+theta2 = pinv(phi2)*y(3+n_d:N_d);
 
 % Simulação livre
 % 1 atraso
 Y1 = zeros(length(y),1);
-Y1(1:tau_d+1) = y(1:tau_d+1);
-for k=tau_d+2:N_d
-    Y1(k) = [Y1(k-1) u(k-tau_d-1)]*theta1;
+Y1(1:n_d+1) = y(1:n_d+1);
+for k=n_d+2:N_d
+    Y1(k) = [Y1(k-1) u(k-n_d-1)]*theta1;
 end
 % Y1(1) = y(1);
 % for k=2:N_d
@@ -103,14 +160,14 @@ end
 
 % 2 atrasos
 Y2 = zeros(length(y),1);
-% Y2(1:tau_d+4) = y(1:tau_d+4);
-% for k=tau_d+5:N_d
-%     Y2(k) = [Y2(k-2) Y2(k-1) u(k-1) u(k-2)]*theta2;
-% end
-Y2(1:2) = y(1:2);
-for k=3:N_d
-    Y2(k) = [Y2(k-1) Y2(k-2) u(k-1) u(k-2)]*theta2;
+Y2(1:n_d+4) = y(1:n_d+4);
+for k=n_d+5:N_d
+    Y2(k) = [Y2(k-2) Y2(k-1) u(k-1-n_d) u(k-2-n_d)]*theta2;
 end
+% Y2(1:2) = y(1:2);
+% for k=3:N_d
+%     Y2(k) = [Y2(k-1) Y2(k-2) u(k-1) u(k-2)]*theta2;
+% end
 
 figure('color',[1 1 1])
 plot(y)
